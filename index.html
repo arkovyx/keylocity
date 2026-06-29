@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Keylocity</title>
   <link rel="stylesheet" href="/static/css/style.css">
 </head>
+
 <body>
   <div class="container">
     <div class="header">
-      <div class="logo">⌨️ key<span>locity</span></div>
+      <div class="logo">
+        <img src="images/speedometer.svg" alt="Keylocity" width="28" height="28"
+          style="vertical-align:middle;margin-right:1px;">
+        key<span>locity</span>
+      </div>
       <div class="right-controls">
         <div class="timer-display" id="timerDisplay">30s</div>
         <div class="controls">
@@ -21,7 +27,6 @@
             <input type="number" id="customTime" placeholder="custom" min="1" max="3600">
             <span class="custom-time-label">s</span>
           </div>
-          <button class="theme-btn" id="themeBtn">☀️</button>
         </div>
       </div>
     </div>
@@ -38,12 +43,24 @@
 
     <div class="report" id="report">
       <div class="big-number" id="reportWpm">0</div>
-      <div class="sub">words per minute</div>
+      <div class="sub">Keylocity</div>
       <div class="stats-grid">
-        <div class="stat-item"><div class="value" id="reportAccuracy">100%</div><div class="label">Accuracy</div></div>
-        <div class="stat-item"><div class="value" id="reportChars">0</div><div class="label">Characters</div></div>
-        <div class="stat-item"><div class="value" id="reportErrors">0</div><div class="label">Errors</div></div>
-        <div class="stat-item"><div class="value" id="reportTime">0s</div><div class="label">Time</div></div>
+        <div class="stat-item">
+          <div class="value" id="reportAccuracy">100%</div>
+          <div class="label">Accuracy</div>
+        </div>
+        <div class="stat-item">
+          <div class="value" id="reportChars">0</div>
+          <div class="label">Characters</div>
+        </div>
+        <div class="stat-item">
+          <div class="value" id="reportErrors">0</div>
+          <div class="label">Errors</div>
+        </div>
+        <div class="stat-item">
+          <div class="value" id="reportTime">0s</div>
+          <div class="label">Time</div>
+        </div>
       </div>
       <button class="reset-btn" id="reportResetBtn">↻ Try Again</button>
     </div>
@@ -51,4 +68,5 @@
 
   <script src="/static/js/main.js"></script>
 </body>
+
 </html>

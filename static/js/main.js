@@ -12,8 +12,7 @@ const state = {
   timerInterval: null,
 };
 
-let configTime = 30;
-let currentTheme = 'dark';
+let configTime = 15;
 
 // --- DOM ---
 const testArea = document.getElementById('testArea');
@@ -32,6 +31,7 @@ const themeBtn = document.getElementById('themeBtn');
 
 // --- WORD LIST ---
 const WORDS = [
+  // Common English words - Basic
   'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'i',
   'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
   'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she',
@@ -39,7 +39,52 @@ const WORDS = [
   'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which', 'go', 'me',
   'when', 'make', 'can', 'like', 'time', 'no', 'just', 'him', 'know', 'take',
   'people', 'into', 'year', 'your', 'good', 'some', 'could', 'them', 'see', 'other',
-  'than', 'then', 'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also'
+  'than', 'then', 'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also',
+  'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well', 'way',
+  'even', 'new', 'want', 'because', 'any', 'these', 'give', 'day', 'most', 'us',
+  
+  // Extended common words
+  'is', 'was', 'are', 'were', 'been', 'being', 'have', 'has', 'had', 'do',
+  'does', 'did', 'doing', 'will', 'would', 'could', 'should', 'may', 'might', 'must',
+  'shall', 'can', 'need', 'keep', 'let', 'begin', 'seem', 'help', 'talk', 'turn',
+  'start', 'show', 'hear', 'play', 'run', 'move', 'like', 'live', 'believe', 'hold',
+  'bring', 'write', 'read', 'understand', 'call', 'sit', 'stand', 'find', 'tell', 'ask',
+  'work', 'seem', 'feel', 'leave', 'put', 'mean', 'keep', 'let', 'begin', 'seem',
+  'help', 'talk', 'turn', 'start', 'show', 'hear', 'play', 'run', 'move', 'like',
+  'live', 'believe', 'hold', 'bring', 'write', 'read', 'understand', 'call', 'sit', 'stand',
+  'find', 'tell', 'ask', 'work', 'seem', 'feel', 'leave', 'put', 'mean', 'keep',
+  
+  // Technology & programming terms
+  'code', 'program', 'python', 'java', 'script', 'web', 'app', 'data', 'api', 'git',
+  'linux', 'arch', 'hyprland', 'terminal', 'command', 'bash', 'zsh', 'fish', 'vim', 'neovim',
+  'docker', 'cloud', 'server', 'network', 'security', 'privacy', 'open', 'source', 'free', 'software',
+  'hardware', 'processor', 'memory', 'storage', 'display', 'keyboard', 'mouse', 'monitor', 'laptop', 'desktop',
+  'function', 'variable', 'class', 'object', 'array', 'string', 'integer', 'float', 'boolean', 'method',
+  'loop', 'condition', 'statement', 'expression', 'operator', 'syntax', 'error', 'debug', 'test', 'build',
+  
+  // Long words (challenge)
+  'extraordinary', 'unbelievable', 'determination', 'environment', 'opportunity', 'responsibility',
+  'communication', 'particularly', 'understanding', 'development', 'independent', 'educational',
+  'interesting', 'experience', 'knowledge', 'possible', 'important', 'different', 'necessary',
+  'beautiful', 'wonderful', 'technology', 'information', 'application', 'performance',
+  'programming', 'development', 'javascript', 'framework', 'community', 'documentation',
+  'authentication', 'authorization', 'encryption', 'validation', 'optimization',
+  
+  // Short words
+  'a', 'an', 'as', 'at', 'by', 'in', 'of', 'on', 'to', 'up',
+  'us', 'we', 'he', 'she', 'it', 'me', 'my', 'do', 'go', 'no',
+  'so', 'be', 'am', 'is', 'are', 'was', 'were', 'been', 'being',
+  
+  // Medium words
+  'about', 'above', 'across', 'after', 'against', 'along', 'among', 'around', 'before', 'behind',
+  'below', 'beneath', 'beside', 'between', 'beyond', 'through', 'throughout', 'toward', 'under', 'upon',
+  'within', 'without', 'according', 'therefore', 'meanwhile', 'however', 'moreover', 'furthermore',
+  
+  // Action verbs
+  'accelerate', 'achieve', 'acquire', 'adapt', 'adjust', 'administer', 'advance', 'analyze', 'apply', 'approach',
+  'assemble', 'assess', 'assign', 'assist', 'assume', 'avoid', 'balance', 'become', 'begin', 'build',
+  'calculate', 'capture', 'cause', 'change', 'choose', 'complete', 'comply', 'compose', 'compute', 'concentrate',
+  'confirm', 'connect', 'consider', 'consist', 'consult', 'continue', 'contribute', 'control', 'convince', 'create'
 ];
 
 // --- HELPERS ---
@@ -125,9 +170,20 @@ function render() {
       globalIdx++;
     }
     if (w < state.words.length - 1) {
-      html += ' ';
-      globalIdx++;
-    }
+  // Render space as a span so cursor can be shown
+  const spaceIdx = globalIdx;
+  let spaceCls = 'char';
+  if (spaceIdx < typed.length) {
+    const typedChar = typed[spaceIdx];
+    if (typedChar === ' ') spaceCls += ' correct';
+    else spaceCls += ' incorrect';
+  }
+  if (!state.isFinished && isActive && globalIdx === typed.length) {
+    spaceCls += ' cursor';
+  }
+  html += `<span class="${spaceCls}"> </span>`;
+  globalIdx++;
+}
   }
 
   if (typed.length > charsLength) {
@@ -282,6 +338,29 @@ document.addEventListener('keydown', (e) => {
     return;
   }
 
+  // Ctrl+Backspace: delete whole word
+  if (key === 'Backspace' && (e.ctrlKey || e.metaKey)) {
+    e.preventDefault();
+    const typed = state.typed;
+    if (typed.length === 0) return;
+    
+    let lastSpaceIndex = -1;
+    for (let i = typed.length - 1; i >= 0; i--) {
+      if (typed[i] === ' ') {
+        lastSpaceIndex = i;
+        break;
+      }
+    }
+    
+    const charsToRemove = typed.length - (lastSpaceIndex + 1);
+    for (let i = 0; i < charsToRemove; i++) {
+      handleBackspace();
+    }
+    render();
+    return;
+  }
+
+  // Enter only works if Tab was pressed first
   if (key === 'Enter' && tabPressed) {
     e.preventDefault();
     tabPressed = false;
@@ -289,9 +368,9 @@ document.addEventListener('keydown', (e) => {
     return;
   }
 
+  // Prevent Enter alone from resetting
   if (key === 'Enter') {
     e.preventDefault();
-    resetTest();
     return;
   }
 
@@ -317,19 +396,6 @@ document.addEventListener('keydown', (e) => {
 
 document.addEventListener('keyup', (e) => {
   if (e.key === 'Tab') tabPressed = false;
-});
-
-// --- THEME ---
-themeBtn.addEventListener('click', () => {
-  if (currentTheme === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'light');
-    themeBtn.textContent = '🌙';
-    currentTheme = 'light';
-  } else {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    themeBtn.textContent = '☀️';
-    currentTheme = 'dark';
-  }
 });
 
 // --- EVENTS ---
@@ -359,9 +425,32 @@ customTimeInput.addEventListener('blur', () => {
 });
 
 testArea.addEventListener('click', () => document.body.focus());
+// --- MOBILE SUPPORT ---
+// Focus on test area when touched
+testArea.addEventListener('touchstart', () => {
+  // Focus the body to capture keyboard events on mobile
+  document.body.focus();
+  // Prevent default to avoid scrolling
+  e.preventDefault();
+});
+
+// Ensure the test area gets focus on click
+testArea.addEventListener('click', () => {
+  document.body.focus();
+});
+
+// On mobile, the keyboard should pop up when tapping the test area
+// This forces the page to be focusable
+document.body.setAttribute('contenteditable', 'false');
 
 // --- INIT ---
 function init() {
+  const activeBtn = document.querySelector('.controls button.active');
+  if (activeBtn) {
+    configTime = parseInt(activeBtn.dataset.time);
+    state.timeLeft = configTime;
+  }
+  
   state.words = getWords(40);
   updateTimer();
   render();
@@ -370,4 +459,4 @@ function init() {
 }
 
 init();
-console.log('⌨️ Keylocity loaded. Start typing!');
+console.log('Keylocity loaded. Start typing!');
