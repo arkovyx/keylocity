@@ -8,7 +8,7 @@ const state = {
   startTime: null,
   isRunning: false,
   isFinished: false,
-  timeLeft: 30,
+  timeLeft: 15,
   timerInterval: null,
 };
 
@@ -27,11 +27,9 @@ const reportChars = document.getElementById('reportChars');
 const reportErrors = document.getElementById('reportErrors');
 const reportTime = document.getElementById('reportTime');
 const timerDisplay = document.getElementById('timerDisplay');
-const themeBtn = document.getElementById('themeBtn');
 
-// --- WORD LIST ---
+// --- WORD LIST (Expanded) ---
 const WORDS = [
-  // Common English words - Basic
   'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'i',
   'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
   'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she',
@@ -42,10 +40,8 @@ const WORDS = [
   'than', 'then', 'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also',
   'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well', 'way',
   'even', 'new', 'want', 'because', 'any', 'these', 'give', 'day', 'most', 'us',
-  
-  // Extended common words
-  'is', 'was', 'are', 'were', 'been', 'being', 'have', 'has', 'had', 'do',
-  'does', 'did', 'doing', 'will', 'would', 'could', 'should', 'may', 'might', 'must',
+  'is', 'was', 'are', 'were', 'been', 'being', 'has', 'had', 'do', 'does',
+  'did', 'doing', 'will', 'would', 'could', 'should', 'may', 'might', 'must',
   'shall', 'can', 'need', 'keep', 'let', 'begin', 'seem', 'help', 'talk', 'turn',
   'start', 'show', 'hear', 'play', 'run', 'move', 'like', 'live', 'believe', 'hold',
   'bring', 'write', 'read', 'understand', 'call', 'sit', 'stand', 'find', 'tell', 'ask',
@@ -53,34 +49,18 @@ const WORDS = [
   'help', 'talk', 'turn', 'start', 'show', 'hear', 'play', 'run', 'move', 'like',
   'live', 'believe', 'hold', 'bring', 'write', 'read', 'understand', 'call', 'sit', 'stand',
   'find', 'tell', 'ask', 'work', 'seem', 'feel', 'leave', 'put', 'mean', 'keep',
-  
-  // Technology & programming terms
   'code', 'program', 'python', 'java', 'script', 'web', 'app', 'data', 'api', 'git',
   'linux', 'arch', 'hyprland', 'terminal', 'command', 'bash', 'zsh', 'fish', 'vim', 'neovim',
   'docker', 'cloud', 'server', 'network', 'security', 'privacy', 'open', 'source', 'free', 'software',
   'hardware', 'processor', 'memory', 'storage', 'display', 'keyboard', 'mouse', 'monitor', 'laptop', 'desktop',
   'function', 'variable', 'class', 'object', 'array', 'string', 'integer', 'float', 'boolean', 'method',
   'loop', 'condition', 'statement', 'expression', 'operator', 'syntax', 'error', 'debug', 'test', 'build',
-  
-  // Long words (challenge)
   'extraordinary', 'unbelievable', 'determination', 'environment', 'opportunity', 'responsibility',
   'communication', 'particularly', 'understanding', 'development', 'independent', 'educational',
   'interesting', 'experience', 'knowledge', 'possible', 'important', 'different', 'necessary',
   'beautiful', 'wonderful', 'technology', 'information', 'application', 'performance',
   'programming', 'development', 'javascript', 'framework', 'community', 'documentation',
   'authentication', 'authorization', 'encryption', 'validation', 'optimization',
-  
-  // Short words
-  'a', 'an', 'as', 'at', 'by', 'in', 'of', 'on', 'to', 'up',
-  'us', 'we', 'he', 'she', 'it', 'me', 'my', 'do', 'go', 'no',
-  'so', 'be', 'am', 'is', 'are', 'was', 'were', 'been', 'being',
-  
-  // Medium words
-  'about', 'above', 'across', 'after', 'against', 'along', 'among', 'around', 'before', 'behind',
-  'below', 'beneath', 'beside', 'between', 'beyond', 'through', 'throughout', 'toward', 'under', 'upon',
-  'within', 'without', 'according', 'therefore', 'meanwhile', 'however', 'moreover', 'furthermore',
-  
-  // Action verbs
   'accelerate', 'achieve', 'acquire', 'adapt', 'adjust', 'administer', 'advance', 'analyze', 'apply', 'approach',
   'assemble', 'assess', 'assign', 'assist', 'assume', 'avoid', 'balance', 'become', 'begin', 'build',
   'calculate', 'capture', 'cause', 'change', 'choose', 'complete', 'comply', 'compose', 'compute', 'concentrate',
@@ -170,20 +150,19 @@ function render() {
       globalIdx++;
     }
     if (w < state.words.length - 1) {
-  // Render space as a span so cursor can be shown
-  const spaceIdx = globalIdx;
-  let spaceCls = 'char';
-  if (spaceIdx < typed.length) {
-    const typedChar = typed[spaceIdx];
-    if (typedChar === ' ') spaceCls += ' correct';
-    else spaceCls += ' incorrect';
-  }
-  if (!state.isFinished && isActive && globalIdx === typed.length) {
-    spaceCls += ' cursor';
-  }
-  html += `<span class="${spaceCls}"> </span>`;
-  globalIdx++;
-}
+      const spaceIdx = globalIdx;
+      let spaceCls = 'char';
+      if (spaceIdx < typed.length) {
+        const typedChar = typed[spaceIdx];
+        if (typedChar === ' ') spaceCls += ' correct';
+        else spaceCls += ' incorrect';
+      }
+      if (!state.isFinished && isActive && globalIdx === typed.length) {
+        spaceCls += ' cursor';
+      }
+      html += `<span class="${spaceCls}"> </span>`;
+      globalIdx++;
+    }
   }
 
   if (typed.length > charsLength) {
@@ -197,7 +176,6 @@ function render() {
 
   testArea.innerHTML = html;
 
-  // --- SLIDING WINDOW SCROLL ---
   const wrapper = testArea.parentElement;
   const wrapperHeight = wrapper.clientHeight;
   const activeWordElem = testArea.querySelector('.word.active');
@@ -205,11 +183,8 @@ function render() {
     const wordTop = activeWordElem.offsetTop;
     const wordHeight = activeWordElem.clientHeight;
     const visibleMid = wrapperHeight / 2;
-    // Center the active word vertically
     const targetOffset = wordTop - visibleMid + wordHeight / 2;
     testArea.style.transform = `translateY(-${Math.max(0, targetOffset)}px)`;
-  } else if (state.isFinished) {
-    // Keep current position
   }
 }
 
@@ -398,6 +373,39 @@ document.addEventListener('keyup', (e) => {
   if (e.key === 'Tab') tabPressed = false;
 });
 
+// --- MOBILE SUPPORT ---
+const hiddenInput = document.getElementById('hiddenInput');
+
+if (hiddenInput) {
+  testArea.addEventListener('touchstart', () => {
+    hiddenInput.focus();
+  });
+
+  testArea.addEventListener('click', () => {
+    hiddenInput.focus();
+  });
+
+  hiddenInput.addEventListener('input', (e) => {
+    const value = e.target.value;
+    if (value.length > 0) {
+      const char = value[value.length - 1];
+      if (char === ' ') {
+        handleChar(' ');
+      } else if (char.match(/[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?`~]/)) {
+        handleChar(char);
+      }
+      e.target.value = '';
+    }
+  });
+
+  hiddenInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Backspace') {
+      e.preventDefault();
+      handleBackspace();
+    }
+  });
+}
+
 // --- EVENTS ---
 resetHint.addEventListener('click', resetTest);
 reportBtn.addEventListener('click', resetTest);
@@ -425,23 +433,6 @@ customTimeInput.addEventListener('blur', () => {
 });
 
 testArea.addEventListener('click', () => document.body.focus());
-// --- MOBILE SUPPORT ---
-// Focus on test area when touched
-testArea.addEventListener('touchstart', () => {
-  // Focus the body to capture keyboard events on mobile
-  document.body.focus();
-  // Prevent default to avoid scrolling
-  e.preventDefault();
-});
-
-// Ensure the test area gets focus on click
-testArea.addEventListener('click', () => {
-  document.body.focus();
-});
-
-// On mobile, the keyboard should pop up when tapping the test area
-// This forces the page to be focusable
-document.body.setAttribute('contenteditable', 'false');
 
 // --- INIT ---
 function init() {
@@ -459,4 +450,4 @@ function init() {
 }
 
 init();
-console.log('Keylocity loaded. Start typing!');
+console.log('⌨️ Keylocity loaded. Start typing!');

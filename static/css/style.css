@@ -23,7 +23,7 @@ body {
   min-height: 100vh;
   padding: 20px;
   user-select: none;
-  transition: background 0.3s, color 0.3s;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .container {
@@ -134,19 +134,7 @@ body {
   opacity: 0.5;
 }
 
-.theme-btn {
-  font-size: 1.1rem;
-  padding: 4px 10px;
-  border-radius: 6px;
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.theme-btn:hover { color: var(--text); }
-
-/* --- TEST AREA (SLIDING WINDOW) --- */
+/* --- TEST AREA --- */
 .test-area-wrapper {
   position: relative;
   height: 350px;
@@ -204,12 +192,12 @@ body {
   box-shadow: 0 0 8px rgba(209, 208, 197, 0.1);
 }
 
+.char.cursor.incorrect { border-left-color: var(--error); }
+
 @keyframes blink {
   0%, 100% { border-color: var(--text); }
   50% { border-color: transparent; }
 }
-
-.char.cursor.incorrect { border-left-color: var(--error); }
 
 /* --- RESET CENTER --- */
 .reset-center {
