@@ -377,8 +377,11 @@ document.addEventListener('keyup', (e) => {
 const hiddenInput = document.getElementById('hiddenInput');
 
 if (hiddenInput) {
-  testArea.addEventListener('touchstart', () => {
+  // Force focus on the hidden input when the test area is touched
+  testArea.addEventListener('touchstart', (e) => {
+    e.preventDefault();
     hiddenInput.focus();
+    hiddenInput.click();
   });
 
   testArea.addEventListener('click', () => {
@@ -403,6 +406,19 @@ if (hiddenInput) {
       e.preventDefault();
       handleBackspace();
     }
+  });
+
+  // On mobile, also handle the 'focus' event to ensure keyboard opens
+  hiddenInput.addEventListener('focus', () => {
+    hiddenInput.setSelectionRange(0, 0);
+  });
+
+  // Fallback: try focusing the body
+  testArea.addEventListener('touchstart', () => {
+    document.body.focus();
+    setTimeout(() => {
+      hiddenInput.focus();
+    }, 100);
   });
 }
 
